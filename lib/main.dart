@@ -5,10 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_db_app/controllers/hive_controller.dart';
+import 'package:hive_db_app/models/person_model.dart';
 import 'package:hive_db_app/screens/home_screen.dart';
 import 'package:hive_db_app/services/hiver_servie.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  await HiveService.instance.init();
+  Hive.registerAdapter(PersonAdapter());
   runApp(MyApp());
 }
 
