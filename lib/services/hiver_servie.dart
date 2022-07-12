@@ -1,33 +1,37 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart' as hive;
 import 'package:hive_db_app/controllers/hive_controller.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_db_app/models/person_model.dart';
+import 'package:path_provider/path_provider.dart' as path;
 
 class HiveService {
   HiveService._();
   static final _ins = HiveService._();
   static HiveService get instance => _ins;
 
-  /// Initialize the Hive service, get the Hive dir.
+  var find = Get.find<HiveController>();
   Future<void> init() async {
-    Directory? dir =
-        Platform.isAndroid ? await getExternalStorageDirectory() : null;
-    dir == null ? Exception('dir not available') : null;
-    print('Path: ${dir!.path}');
-    hive.Hive.init(dir.path);
-    log('Hive init');
-    Get.find<HiveController>().isInitialized.value = true;
+    Platform.isAndroid || Platform.isIOS
+        ? hive.Hive.init(await dirctory)
+        : null;
+    find.isInitialized.value = true;
     return;
   }
 
-  Future<void> createBox<T>(String boxName) async {
-    var b = await hive.Hive.openBox<T>(boxName);
-    var find = Get.find<HiveController>();
-    find.box = b.obs;
+  Future<String> get dirctory async =>
+      await path.getApplicationDocumentsDirectory().then((value) {
+        log(value.path);
+        return value.path;
+      });
+
+  /// opens the person box with given name
+  Future<void> openPersons(String boxName) async {
+    var b = await hive.Hive.openBox<Person>(boxName);
+    find.personBox = b.obs;
     find.update();
 
     log('created box $boxName');
