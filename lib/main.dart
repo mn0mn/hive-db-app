@@ -15,11 +15,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(
           name: '/',
-          page: () => HomeScreen(),
+          page: () => HomeScreen(
+            context: context,
+          ),
           binding: BindingsBuilder(
             () => Get.put<HiveController>(HiveController()),
           ),
