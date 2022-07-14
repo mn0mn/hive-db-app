@@ -1,3 +1,4 @@
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
 part 'person_model.g.dart';
 
@@ -11,4 +12,8 @@ class Person extends HiveObject {
   final int age;
 
   Person(this.name, this.lastName, this.age);
+
+  factory Person.dummy(int age) {
+    return Person('name', 'lastName', age);
+  }
 }
